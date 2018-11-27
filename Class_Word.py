@@ -7,7 +7,6 @@ class Word:
     x = 0
     y = 0
     length = 0
-    assistant = 1
     def __init__(self,speed,x,y,length,isBomb):
         self.speed = speed
         self.x = x
@@ -15,7 +14,7 @@ class Word:
         self.length = length
         for i in range(self.length):
             self.key = self.key + random.choice(string.ascii_uppercase)  
-        if random.randrange(1,100) <= 20:
+        if random.randrange(1,100) <= 30:
             isBomb = True
         
         print(self.isBomb)
@@ -24,7 +23,6 @@ class Word:
         print(self.y)
         print(self.speed)
     def rand(self):
-        self.assistant = 1
         self.key = ""
         for i in range(self.length):
             self.key = self.key + random.choice(string.ascii_uppercase)
