@@ -131,13 +131,13 @@ def playAgain():
 # Hàm Run chạy game
 # return true nếu người chơi win hoặc muốn chơi lại
 # return false nếu người chơi thoát game hoặc không muốn chơi lại
+count = 0
 def Run(Finish):
+    
     # Tọa độ của đường kẻ ngang
     yLine = height - 100
-    # Ký tự gõn
-    typeCharacter = None
     # Tốc độ của từ
-    speed = [20,18,13,14,15]
+    speed = [18,16,12,13,14]
     # Biến hit saw
     hitSaw = False
     # Biến gameover
@@ -181,8 +181,7 @@ def Run(Finish):
                 if event.key == pygame.K_SPACE:
                     linkBackground = ".\\asset\\backgroundtrue.png"
                     type = ""
-                elif event.key >= 97 and event.key <= 122:
-                    typeCharacter = chr(event.key)                
+                elif event.key >= 97 and event.key <= 122:             
                     type += chr(event.key)
                     if len(type) == 10:
                         type = ""
@@ -199,9 +198,9 @@ def Run(Finish):
                 typeTrue = True
                 score += 1       
                 #======================Cập nhật level===================
-                if score % 100 == 0:
-                    # Nếu đạt 600 điểm thì dừng game và chúc mừng người chơi
-                    if (score == 500):
+                if score % 20 == 0:
+                    # Nếu đạt 100 điểm thì dừng game và chúc mừng người chơi
+                    if (score == 100):
                         gameover = True
                         break
                     level += 1
@@ -218,10 +217,9 @@ def Run(Finish):
                 #======================Kết thúc cập nhật level===================    
                 item.y = 0
                 item.rand()
-                break
             # Nếu người chơi nhập sai
             else:
-                typeTrue = False
+                # Biến max dùng để vẽ từ
                 max = 58
                 if level == 3:
                     max = 40
@@ -229,9 +227,10 @@ def Run(Finish):
                     max = 44
                 elif level == 5:
                     max = 40
+                # Nếu vật gặp đường thẳng
                 if item.y >= yLine - max:
                     if item.isBomb == True:
-                        score -= 2 + level / 2
+                        score -= int (2 + level / 2)
                         if score < 0:
                             score = 0
                         item.y = 0
@@ -242,8 +241,9 @@ def Run(Finish):
                     item.move()
         
         # Cập nhật lại tọa độ các object để vẽ
-        if SawDirection == True and xSaw + 80 < width:
-            # Chia lấy phần nguyên cho số frame
+        
+        # Cập nhật lại tọa độ Saw
+        if (SawDirection == True) and (xSaw + 80 < width):
             xSaw += 40
             if xSaw + 80 >= width:
                 SawDirection = False
@@ -264,23 +264,34 @@ def Run(Finish):
         if typeTrue == True:
             linkBackground = ".\\asset\\backgroundtrue.png"
         elif type != "" and len(type) == length:
-            linkBackground = ".\\asset\\backgroundwrong.png"
+            linkBackground = ".\\asset\\backgroundwrong.jpg"
+        # Load một image thời gian khác nhau nên hơi lâu
+        # phải delay để đạt được tốc độ đồng bộ
+        # Không có dòng này có thể game sẽ hay hơn
+        # pygame.time.delay(50)
+
         ingameImg = pygame.image.load(linkBackground)
         win.blit(ingameImg,(0,0))
+        
         # Ve saw
         saw = pygame.image.load(".\\asset\\saw.png")
         win.blit(saw,(xSaw,height - 140))
+        
         # Vẽ đường thẳng ngăn cách
         pygame.draw.line(win,(0,0,0),(0,height-100),(width,height-100),6)
+        
         # Vẽ các từ
         for item in listOfWord:
             if item.isBomb == True:
                 drawText(item.key,item.x,item.y,black,40)
             else:
                 drawText(item.key,item.x,item.y,blue,40)
+        
+        # Vẽ các element
         drawText(scoreAchieve,width - 185,height - 50,black,20)
         drawText(typingString,width/2 - 150,height - 50,black,20)
         drawText(levelText,0,height - 50,black,20)
+        
         # Vẽ gameover
         if gameover == True:
             gameover_img = pygame.image.load(".\\asset\\gameover.png")
@@ -298,17 +309,23 @@ def Run(Finish):
         if gameover == True:
             pygame.time.delay(3000)
             return True
+        
         # Kiểm tra xem người chơi có để từ đụng phải Saw hay không
         if hitSaw == True:
             return playAgain()
+        
         # Kiểm tra xem người chơi nhập đúng hay không
         if typeTrue == True:
             typeTrue = False
             type = ""
-        clock.tick(60)
+        clock.tick(30)
     return False
 
-while True:
-    Menu()
-    if Run(Finish) == False:
-        break
+
+
+
+if __name__ == "__main__":
+    while True:
+        Menu()
+        if Run(Finish) == False:
+            break

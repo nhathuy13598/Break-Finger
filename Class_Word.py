@@ -16,12 +16,7 @@ class Word:
             self.key = self.key + random.choice(string.ascii_uppercase)  
         if random.randrange(1,100) <= 30:
             isBomb = True
-        
-        print(self.isBomb)
-        print(self.key)
-        print(self.x)
-        print(self.y)
-        print(self.speed)
+      
     def rand(self):
         self.key = ""
         for i in range(self.length):
